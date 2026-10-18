@@ -20,6 +20,17 @@ test("exige HTTPS público y permite HTTP únicamente en localhost", () => {
   }
 });
 
+test("en Vercel reemplaza localhost por el dominio estable y rechaza destinos locales sin alternativa", () => {
+  const vercel = { activo: "1", dominioProduccion: "cabildo.vercel.app" };
+  for (const valor of [undefined, "", "http://localhost:3000", "http://127.0.0.1:3000", "http://[::1]:3000"]) {
+    assert.deepEqual(configurarUrlQr(valor, vercel), { base: "https://cabildo.vercel.app", local: false });
+  }
+  assert.equal(configurarUrlQr("https://cabildo.example", vercel).base, "https://cabildo.example");
+  assert.throws(() => configurarUrlQr("http://localhost:3000", { activo: "1" }));
+  assert.throws(() => configurarUrlQr(undefined, { activo: "1", dominioProduccion: "localhost" }));
+  assert.throws(() => configurarUrlQr("https://cabildo.example/ruta", vercel));
+});
+
 test("comprueba la consistencia de los contadores", () => {
   assert.equal(esResumenCredenciales({ total: 12, disponibles: 12, utilizadas: 0 }), true);
   for (const resumen of [null, {}, { total: 2, disponibles: 1, utilizadas: 0 }, { total: -1, disponibles: -1, utilizadas: 0 }, { total: "1", disponibles: 1, utilizadas: 0 }]) assert.equal(esResumenCredenciales(resumen), false);

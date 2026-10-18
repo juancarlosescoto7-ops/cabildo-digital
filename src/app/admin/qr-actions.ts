@@ -23,7 +23,9 @@ export async function generarCredenciales(cantidad: unknown): Promise<{ error: s
     if (!admin) return { error: "La sesión no está autorizada. Iniciá sesión nuevamente." };
     if (admin.evento.estado !== "preparacion") return { error: "Solo se pueden generar credenciales mientras el cabildo está en preparación." };
     if (!cantidadValida(cantidad)) return { error: "Ingresá una cantidad entera entre 1 y 100." };
-    const { base } = configurarUrlQr(process.env.CABILDO_URL_BASE);
+    const { base } = configurarUrlQr(process.env.CABILDO_URL_BASE, {
+      activo: process.env.VERCEL, dominioProduccion: process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    });
     // Preparar las imágenes antes de insertar: un fallo de renderizado no crea filas.
     const material = await generarMaterialQr(cantidad, base);
     // Solo viajan hashes a la base; la RPC verifica autorización y estado bajo bloqueo.

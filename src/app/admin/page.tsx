@@ -35,7 +35,9 @@ async function Administracion() {
   const resumen = await leerResumenCredenciales(admin).catch(() => null);
   let urlBase = null;
   let errorUrl = null;
-  try { urlBase = configurarUrlQr(process.env.CABILDO_URL_BASE); }
+  try { urlBase = configurarUrlQr(process.env.CABILDO_URL_BASE, {
+    activo: process.env.VERCEL, dominioProduccion: process.env.VERCEL_PROJECT_PRODUCTION_URL,
+  }); }
   catch (error) { errorUrl = error instanceof Error ? error.message : "Revisá la URL base de los QR."; }
   return <>
     <EstadoConsulta inicial={inicial.estado} />

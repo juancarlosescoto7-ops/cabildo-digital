@@ -7,7 +7,18 @@ export function cantidadValida(cantidad: unknown): cantidad is number {
   return typeof cantidad === "number" && Number.isInteger(cantidad) && cantidad >= 1 && cantidad <= MAXIMO_LOTE;
 }
 
-export function configurarUrlQr(valor: string | undefined) {
+export function configurarUrlQr(valor: string | undefined, vercel?: { activo?: string; dominioProduccion?: string }): { base: string; local: boolean } {
+  // Los QR impresos deben conservar el dominio estable de producción.
+  if (vercel?.activo === "1") {
+    const configurada = valor ? configurarUrlQr(valor) : null;
+    if (configurada && !configurada.local) return configurada;
+    if (!vercel.dominioProduccion) {
+      throw new Error("Configurá CABILDO_URL_BASE con el dominio público HTTPS del cabildo antes de generar QR en Vercel.");
+    }
+    const publica = configurarUrlQr(`https://${vercel.dominioProduccion}`);
+    if (publica.local) throw new Error("Los QR en Vercel deben apuntar a un dominio público.");
+    return publica;
+  }
   if (!valor) throw new Error("Configurá CABILDO_URL_BASE antes de generar códigos QR.");
   let url: URL;
   try { url = new URL(valor); } catch { throw new Error("CABILDO_URL_BASE debe ser una URL válida."); }
