@@ -1,0 +1,8 @@
+import "server-only";
+
+export function configuracionSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) throw new Error("Falta configurar la conexión con Supabase en el servidor.");
+  return { url, key };
+}

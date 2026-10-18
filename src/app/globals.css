@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f8f7;
+  --foreground: #163c39;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection { background: #99f6e4; color: #134e4a; }
+:where(a, button, input, textarea):focus-visible { outline: 3px solid #0d9488; outline-offset: 3px; }
+button:not(:disabled), summary { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+input, textarea { accent-color: #0f766e; }
+input:not([type="radio"]):not([type="checkbox"]), textarea { background-color: white; }
+html { scroll-padding-top: 2rem; }
+.panel-sidebar { background: linear-gradient(165deg, #134e4a 0%, #073d39 52%, #042f2e 100%); }
+.hero-municipal { background-color: #115e59; background-size: cover; background-position: center; }
+.acceso-card { box-shadow: 0 4px 24px -12px rgb(19 78 74 / 15%); }
+.button-primary { background-image: linear-gradient(115deg, #0f766e, #115e59); box-shadow: 0 4px 12px -5px rgb(15 118 110 / 40%); }
+.button-primary:hover { background-image: linear-gradient(115deg, #115e59, #134e4a); }
+.skip-link { position: fixed; left: 1rem; top: -8rem; z-index: 100; padding: 1rem; border-radius: .75rem; background: white; color: #134e4a; }
+.skip-link:focus { top: 1rem; }
+.public-surface { background: radial-gradient(ellipse at top right, #ccfbf1 0%, transparent 55%), #f4f8f7; }
+.resultados-surface { background: radial-gradient(ellipse at top right, #134e4a 0%, transparent 60%), #042f2e; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+@media print {
+  html, body {
+    height: auto !important;
+    min-height: 0 !important;
+    background: white !important;
+    color: black !important;
+  }
+  .admin-preguntas, .qr-no-imprimir, nextjs-portal {
+    display: none !important;
+  }
+  .panel-shell { display: block !important; }
+  .panel-main, .panel-content { margin: 0 !important; padding: 0 !important; max-width: none !important; }
+  .qr-panel, .qr-contenido, .qr-hojas {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    background: white !important;
+  }
+  .qr-hoja {
+    display: grid !important;
+    grid-template-columns: repeat(3, 60mm) !important;
+    grid-auto-rows: 65mm;
+    gap: 3mm !important;
+    margin: 0 !important;
+    break-after: page;
+    break-inside: avoid;
+  }
+  .qr-hoja:last-child { break-after: auto; }
+  .qr-tarjeta {
+    box-sizing: border-box;
+    width: 60mm;
+    height: 65mm;
+    padding: 2mm !important;
+    border: 0.25mm dashed #888 !important;
+    border-radius: 0 !important;
+    break-inside: avoid;
+    overflow: hidden;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .qr-imagen { width: 42mm !important; height: 42mm !important; flex-shrink: 0; }
+  .qr-marca { font: bold 11pt Arial, sans-serif; }
+  .qr-numero { font: 9pt Arial, sans-serif; }
+  .qr-pie, .qr-prueba { font: 7pt Arial, sans-serif; }
+}
